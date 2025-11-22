@@ -1,0 +1,105 @@
+---
+title: "Análisis univariado"
+author: "Sara Aponte, Juan Roa y Juan Guayazán"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r importDataset}
+library(readr)
+icfes_20201 <- read_csv("icfes_20201.csv")
+summary(icfes_20201)
+```
+
+
+```{r , echo=TRUE}
+variables <- c(
+  "ESTU_CONSECUTIVO","ESTU_TIPODOCUMENTO","ESTU_NACIONALIDAD",
+  "ESTU_GENERO","ESTU_FECHANACIMIENTO","PERIODO",
+  "ESTU_ESTUDIANTE","ESTU_PAIS_RESIDE","ESTU_TIENEETNIA",
+  "ESTU_DEPTO_RESIDE","ESTU_COD_RESIDE_DEPTO","ESTU_MCPIO_RESIDE",
+  "ESTU_COD_RESIDE_MCPIO","FAMI_ESTRATOVIVIENDA","FAMI_PERSONASHOGAR",
+  "FAMI_CUARTOSHOGAR","FAMI_EDUCACIONPADRE","FAMI_EDUCACIONMADRE",
+  "FAMI_TRABAJOLABORPADRE","FAMI_TRABAJOLABORMADRE","FAMI_TIENEINTERNET",
+  "FAMI_TIENESERVICIOTV","FAMI_TIENECOMPUTADOR","FAMI_TIENELAVADORA",
+  "FAMI_TIENEHORNOMICROOGAS","FAMI_TIENEAUTOMOVIL","FAMI_TIENEMOTOCICLETA",
+  "FAMI_TIENECONSOLAVIDEOJUEGOS","FAMI_NUMLIBROS","FAMI_COMELECHEDERIVADOS",
+  "FAMI_COMECARNEPESCADOHUEVO","FAMI_COMECEREALFRUTOSLEGUMBRE","FAMI_SITUACIONECONOMICA",
+  "ESTU_DEDICACIONLECTURADIARIA","ESTU_DEDICACIONINTERNET","ESTU_HORASSEMANATRABAJA",
+  "ESTU_TIPOREMUNERACION","COLE_CODIGO_ICFES","COLE_COD_DANE_ESTABLECIMIENTO",
+  "COLE_NOMBRE_ESTABLECIMIENTO","COLE_GENERO","COLE_NATURALEZA",
+  "COLE_CALENDARIO","COLE_BILINGUE","COLE_CARACTER",
+  "COLE_COD_DANE_SEDE","COLE_NOMBRE_SEDE","COLE_SEDE_PRINCIPAL",
+  "COLE_AREA_UBICACION","COLE_JORNADA","COLE_COD_MCPIO_UBICACION",
+  "COLE_MCPIO_UBICACION","COLE_COD_DEPTO_UBICACION","COLE_DEPTO_UBICACION",
+  "ESTU_PRIVADO_LIBERTAD","ESTU_COD_MCPIO_PRESENTACION","ESTU_MCPIO_PRESENTACION",
+  "ESTU_DEPTO_PRESENTACION","ESTU_COD_DEPTO_PRESENTACION","PUNT_LECTURA_CRITICA",
+  "PERCENTIL_LECTURA_CRITICA","DESEMP_LECTURA_CRITICA","PUNT_MATEMATICAS",
+  "PERCENTIL_MATEMATICAS","DESEMP_MATEMATICAS","PUNT_C_NATURALES",
+  "PERCENTIL_C_NATURALES","DESEMP_C_NATURALES","PUNT_SOCIALES_CIUDADANAS",
+  "PERCENTIL_SOCIALES_CIUDADANAS","DESEMP_SOCIALES_CIUDADANAS","PUNT_INGLES",
+  "PERCENTIL_INGLES","DESEMP_INGLES","PUNT_GLOBAL",
+  "PERCENTIL_GLOBAL","ESTU_INSE_INDIVIDUAL","ESTU_NSE_INDIVIDUAL",
+  "ESTU_NSE_ESTABLECIMIENTO","ESTU_ESTADOINVESTIGACION","ESTU_GENERACION-E",
+  "ESTU_ETNIA","ESTU_PILOPAGA","ESTU_LIMITA_MOTRIZ"
+)
+
+```
+
+```{r , echo=TRUE}
+for (var in variables) {
+  
+  cat("### Variable:", var, "\n\n")
+  
+  # Verificar si existe
+  if (!var %in% names(icfes_20201)) {
+    cat("La variable no existe en el dataset.\n\n")
+    next
+  }
+  
+  # Tabla de frecuencias
+  tabla <- table(icfes_20201[[var]], useNA = "ifany")
+  
+  if (length(tabla) == 0) {
+    cat("No hay datos para esta variable.\n\n")
+    next
+  }
+  
+  tabla_df <- as.data.frame(tabla)
+  names(tabla_df) <- c("Categoria", "Frecuencia")
+  
+  print(tabla_df)
+  
+  # Solo graficar si tiene <=10 categorías
+  if (nrow(tabla_df) <= 10) {
+    
+    # Crear gráfico
+    bp <- barplot(
+      tabla_df$Frecuencia,
+      names.arg = tabla_df$Categoria,
+      main = var,
+      col = "steelblue",
+      las = 2,
+      cex.names = 0.8
+    )
+    
+    # AGREGAR VALORES ENCIMA DE CADA BARRA
+    text(
+      x = bp,
+      y = tabla_df$Frecuencia,
+      labels = tabla_df$Frecuencia,
+      pos = 3,           # arriba de la barra
+      cex = 0.9
+    )
+    
+  } else {
+    cat("Demasiadas categorías para graficar.\n")
+  }
+}
+
+```

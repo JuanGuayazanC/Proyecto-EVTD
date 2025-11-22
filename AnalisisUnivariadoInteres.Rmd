@@ -1,0 +1,77 @@
+---
+title: "Análisis univariado interes"
+author: "Sara Aponte, Juan Roa y Juan Guayazán"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r importDataset}
+library(readr)
+icfes_20201 <- read_csv("icfes_20201.csv")
+```
+
+
+```{r , echo=TRUE}
+variables <- c(
+  "ESTU_NACIONALIDAD", "ESTU_GENERO", "FAMI_ESTRATOVIVIENDA", "FAMI_EDUCACIONPADRE", "FAMI_EDUCACIONMADRE", "FAMI_TIENEINTERNET", "FAMI_TIENECOMPUTADOR", "FAMI_NUMLIBROS", "FAMI_COMELECHEDERIVADOS", "FAMI_COMECARNEPESCADOHUEVO", "FAMI_COMECEREALFRUTOSLEGUMBRE", "ESTU_DEDICACIONLECTURADIARIA", "ESTU_HORASSEMANATRABAJA", "COLE_BILINGUE", "COLE_AREA_UBICACION", "COLE_JORNADA", "PUNT_LECTURA_CRITICA", "PUNT_LECTURA_CRITICA", "PUNT_C_NATURALES", "PUNT_SOCIALES_CIUDADANAS", "PUNT_INGLES", "PUNT_GLOBAL", "ESTU_LIMITA_MOTRIZ"
+)
+
+```
+
+```{r , echo=TRUE}
+for (var in variables) {
+  
+  cat("### Variable:", var, "\n\n")
+  
+  # Verificar si existe
+  if (!var %in% names(icfes_20201)) {
+    cat("La variable no existe en el dataset.\n\n")
+    next
+  }
+  
+  # Tabla de frecuencias
+  tabla <- table(icfes_20201[[var]], useNA = "ifany")
+  
+  if (length(tabla) == 0) {
+    cat("No hay datos para esta variable.\n\n")
+    next
+  }
+  
+  tabla_df <- as.data.frame(tabla)
+  names(tabla_df) <- c("Categoria", "Frecuencia")
+  
+  print(tabla_df)
+  
+  # Solo graficar si tiene <=10 categorías
+  if (nrow(tabla_df) <= 10) {
+    
+    # Crear gráfico
+    bp <- barplot(
+      tabla_df$Frecuencia,
+      names.arg = tabla_df$Categoria,
+      main = var,
+      col = "steelblue",
+      las = 2,
+      cex.names = 0.8
+    )
+    
+    # AGREGAR VALORES ENCIMA DE CADA BARRA
+    text(
+      x = bp,
+      y = tabla_df$Frecuencia,
+      labels = tabla_df$Frecuencia,
+      pos = 3,           # arriba de la barra
+      cex = 0.9
+    )
+    
+  } else {
+    cat("Demasiadas categorías para graficar.\n")
+  }
+}
+
+```
