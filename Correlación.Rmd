@@ -193,16 +193,17 @@ vars_ordinales_num <- sapply(icfes_corr[, c(
   "FAMI_COMECARNEPESCADOHUEVO",
   "FAMI_COMECEREALFRUTOSLEGUMBRE"
 )], as.numeric)
+```
 
-cor_spearman <- cor(cbind(vars_ordinales_num, icfes_corr[, vars_puntajes]),
-                    method = "spearman")
+```{r}
+cor_spearman <- cor(vars_ordinales_num, method = "spearman")
 cor_spearman
 ```
 
 ```{r , MatrizKendall}
-cor_kendall <- cor(cbind(vars_ordinales_num, icfes_corr[, vars_puntajes]),
-                   method = "kendall")
+cor_kendall <- cor(vars_ordinales_num, method = "kendall")
 cor_kendall
+
 ```
 
 ```{r , HeatmapCorrelaciones}
