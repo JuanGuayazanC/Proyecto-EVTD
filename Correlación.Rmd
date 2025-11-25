@@ -206,6 +206,45 @@ cor_kendall
 
 ```
 
+```{r , cambio}
+# ---- Renombrar variables para la visualización ----
+
+# Nombres bonitos para puntajes
+nombres_puntajes <- c(
+  "Lectura Crítica",
+  "Matemáticas",
+  "C. Naturales",
+  "Sociales",
+  "Inglés",
+  "Global"
+)
+
+# Renombrar Pearson
+colnames(cor_pearson) <- nombres_puntajes
+rownames(cor_pearson) <- nombres_puntajes
+
+# Nombres bonitos para ordinales
+nombres_ordinales <- c(
+  "Estrato",
+  "Edu. Padre",
+  "Edu. Madre",
+  "Lectura Diario",
+  "Horas Trabajo",
+  "Libros",
+  "Leche",
+  "Carne/Huevo",
+  "Cereales"
+)
+
+# Renombrar Spearman
+colnames(cor_spearman) <- nombres_ordinales
+rownames(cor_spearman) <- nombres_ordinales
+
+# Renombrar Kendall
+colnames(cor_kendall) <- nombres_ordinales
+rownames(cor_kendall) <- nombres_ordinales
+```
+
 ```{r , HeatmapCorrelaciones}
 corrplot(cor_pearson, method = "color", na.label = " ")
 corrplot(cor_spearman, method = "color", na.label = " ")
