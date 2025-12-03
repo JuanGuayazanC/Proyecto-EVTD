@@ -182,6 +182,7 @@ cor_pearson
 ```
 
 ```{r , MatrizSpearman}
+# Convertir ordinales a numérico
 vars_ordinales_num <- sapply(icfes_corr[, c(
   "FAMI_ESTRATOVIVIENDA",
   "FAMI_EDUCACIONPADRE",
@@ -193,15 +194,22 @@ vars_ordinales_num <- sapply(icfes_corr[, c(
   "FAMI_COMECARNEPESCADOHUEVO",
   "FAMI_COMECEREALFRUTOSLEGUMBRE"
 )], as.numeric)
+
+# Agregar puntaje global
+matriz_spearman_input <- cbind(
+  vars_ordinales_num,
+  Global = icfes_corr$PUNT_GLOBAL
+)
+
 ```
 
 ```{r}
-cor_spearman <- cor(vars_ordinales_num, method = "spearman")
+cor_spearman <- cor(matriz_spearman_input, method = "spearman")
 cor_spearman
 ```
 
 ```{r , MatrizKendall}
-cor_kendall <- cor(vars_ordinales_num, method = "kendall")
+cor_kendall <- cor(matriz_spearman_input, method = "kendall")
 cor_kendall
 
 ```
@@ -224,7 +232,7 @@ colnames(cor_pearson) <- nombres_puntajes
 rownames(cor_pearson) <- nombres_puntajes
 
 # Nombres bonitos para ordinales
-nombres_ordinales <- c(
+nombres_ordinales_global <- c(
   "Estrato",
   "Edu. Padre",
   "Edu. Madre",
@@ -233,24 +241,21 @@ nombres_ordinales <- c(
   "Libros",
   "Leche",
   "Carne/Huevo",
-  "Cereales"
+  "Cereales",
+  "P.Global"
 )
 
 # Renombrar Spearman
-colnames(cor_spearman) <- nombres_ordinales
-rownames(cor_spearman) <- nombres_ordinales
+rownames(cor_spearman) <- nombres_ordinales_global
+colnames(cor_spearman) <- nombres_ordinales_global
 
 # Renombrar Kendall
-colnames(cor_kendall) <- nombres_ordinales
-rownames(cor_kendall) <- nombres_ordinales
+rownames(cor_kendall) <- nombres_ordinales_global
+colnames(cor_kendall) <- nombres_ordinales_global
 ```
 
 ```{r , HeatmapCorrelaciones}
 corrplot(cor_pearson, method = "color", na.label = " ")
 corrplot(cor_spearman, method = "color", na.label = " ")
 corrplot(cor_kendall, method = "color", na.label = " ")
-```
-
-```{r , echo=TRUE}
-
 ```
